@@ -1,23 +1,32 @@
 package main
 
 import (
-	"github.com/Molsbee/crypt/gui"
-	"github.com/maxence-charriere/go-app/v9/pkg/app"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/driver/desktop"
+	"fyne.io/fyne/v2/widget"
+	"github.com/Molsbee/crypt/assets"
 	"log"
-	"net/http"
 )
 
 func main() {
-	app.Route("/", &gui.Hello{})
-	app.Route("/hello", &gui.Hello{})
-	app.RunWhenOnBrowser()
+	a := app.New()
+	a.SetIcon(assets.Logo)
+	setupTray(a)
+	w := a.NewWindow("Hello World")
+	w.SetContent(widget.NewLabel("Hello World!"))
+	w.ShowAndRun()
+}
 
-	http.Handle("/", &app.Handler{
-		Name:        "Hello",
-		Description: "A Hello World! example",
-	})
-
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
+func setupTray(a fyne.App) {
+	if desk, ok := a.(desktop.App); ok {
+		h := fyne.NewMenuItem("Stub", func() {})
+		menu := fyne.NewMenu("", h)
+		h.Action = func() {
+			log.Println("System tray menu tapped")
+			h.Label = "Welcome"
+			menu.Refresh()
+		}
+		desk.SetSystemTrayMenu(menu)
 	}
 }
