@@ -1,29 +1,23 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/Molsbee/crypt/gui"
+	"github.com/maxence-charriere/go-app/v9/pkg/app"
+	"log"
+	"net/http"
 )
 
 func main() {
-	// Client should encrypt/decrypt
-	// Server should store/retrieve encrypted data associated with user
-	router := gin.Default()
-	router.Run()
+	app.Route("/", &gui.Hello{})
+	app.Route("/hello", &gui.Hello{})
+	app.RunWhenOnBrowser()
 
-	// Encrypt File
-	//data, _ := os.ReadFile("temp.txt")
+	http.Handle("/", &app.Handler{
+		Name:        "Hello",
+		Description: "A Hello World! example",
+	})
 
-	//block, _ := aes.NewCipher([]byte("TestingSomething"))
-	//gcm, _ := cipher.NewGCM(block)
-	//nonce := make([]byte, gcm.NonceSize())
-	//io.ReadFull(rand.Reader, nonce)
-	//ciphertext := gcm.Seal(nonce, nonce, data, nil)
-	//os.WriteFile("ciphertext.bin", ciphertext, 0777)
-
-	// Decrypt Encrypted File
-	//ciphertext, _ = os.ReadFile("ciphertext.bin")
-	//nonce = ciphertext[:gcm.NonceSize()]
-	//ciphertext = ciphertext[gcm.NonceSize():]
-	//plaintext, _ := gcm.Open(nil, nonce, ciphertext, nil)
-	//os.WriteFile("plaintext.txt", plaintext, 0777)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		log.Fatal(err)
+	}
 }
