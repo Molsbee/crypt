@@ -23,18 +23,9 @@ func main() {
 		mainWindow.SetContent(mainApp())
 	}))
 	mainWindow.Resize(fyne.NewSize(640, 460))
-
-	//mainWindow.SetContent(split)
-	//tabs := container.NewAppTabs(
-	//	container.NewTabItem("Tab 1", widget.NewLabel("Tab 1")),
-	//	container.NewTabItem("Tab 2", widget.NewLabel("Tab 2")),
-	//)
-	//tabs.SetTabLocation(container.TabLocationLeading)
-	//mainWindow.SetContent(tabs)
 	mainWindow.SetOnClosed(func() {
 		os.Exit(0)
 	})
-
 	mainWindow.ShowAndRun()
 }
 
@@ -68,12 +59,12 @@ func mainApp() *container.Split {
 
 	menu := container.NewVBox(
 		widget.NewButton("Images", func() {
-			img := canvas.NewImageFromResource(assets.Logo)
+			var images []fyne.CanvasObject
+			for _, _ = range []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} {
+				images = append(images, canvas.NewImageFromResource(assets.Logo))
+			}
 			data.RemoveAll()
-			data.Add(container.NewGridWrap(fyne.NewSize(50, 50), img, img, img, img, img))
-			//data = container.NewGridWrap(fyne.NewSize(50, 50), img, img, img, img, img)
-			//data.Refresh()
-			log.Println("Tab 1")
+			data.Add(container.NewGridWrap(fyne.NewSize(100, 100), images...))
 		}),
 		widget.NewButton("Tab 2", func() {
 			log.Println("Tab 2")
